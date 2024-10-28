@@ -1,5 +1,5 @@
-#lang racket
-;; Exercise 1.1: Below is a sequence of expressions.  What is the
+#lang sicp
+;; Exercise 1.1: Below is a sequence of expressions. What is the
 ;;      result printed by the interpreter in response to each expression?
 ;;      Assume that the sequence is to be evaluated in the order in which
 ;;      it is presented.
@@ -53,8 +53,8 @@
 ;;     arguments and returns the sum of the squares of the two larger
 ;;     numbers.
 ;;
-(define (return-sq-two-max x y z) ;; Nota: mi primera implementacion no es tan "Lispy
-
+;; ;; Nota: mi primera implementación no es tan "Lispy"
+(define (return-sq-two-max x y z)
   (cond
     [(and (> x y) (> x z))
      (+ (* x x)
@@ -73,12 +73,57 @@
             (* y y)))]
     [else 0]))
 
-;; Una implementacion un poco funcional :)
+;; Una implementación un poco funcional :)
 (define (sum-square x y)
-  (+ (* x x) (* y y))) ;; procedure que retorna la suma de cuadrados de dos numeros
+  (+ (* x x) (* y y))) ;; procedimiento que retorna la suma de cuadrados de dos números
 
 (define (square-two-max x y z)
   (cond
     [(and (>= (+ x y) (+ y z)) (>= (+ x y) (+ x z))) (sum-square x y)]
     [(and (>= (+ x z) (+ y z)) (>= (+ x z) (+ x y))) (sum-square x z)]
     [else (sum-square y z)]))
+
+;; *Exercise 1.4:* Observe that our model of evaluation allows for
+;;      combinations whose operators are compound expressions. Use this
+;;      observation to describe the behavior of the following procedure:
+
+;;            (define (a-plus-abs-b a b)
+;;              ((if (> b 0) + -) a b))
+
+;; R/ Evalúa si (b > 0). Si es así, entonces se hace la suma (+ a b).
+;; De lo contrario, se usa la resta (- a b), lo cual equivale a calcular:
+;; (a + |b|) porque a - (-b).
+
+;; *Exercise 1.5:* Ben Bitdiddle has invented a test to determine
+;;  whether the interpreter he is faced with is using
+;;  applicative-order evaluation or normal-order evaluation. He
+;;  defines the following two procedures:
+;;
+;;       (define (p) (p))
+;;
+;;
+;;       (define (test x y)
+;;         (if (= x 0)
+;;             0
+;;             y))
+;;
+;;  Then he evaluates the expression
+;;
+;;          (test 0 (p))
+;;
+;;  What behavior will Ben observe with an interpreter that uses
+;;  applicative-order evaluation? What behavior will he observe with
+;;  an interpreter that uses normal-order evaluation? Explain your
+;;  answer. (Assume that the evaluation rule for the special form
+;;  `if' is the same whether the interpreter is using normal or
+;;  applicative order: The predicate expression is evaluated first,
+;;  and the result determines whether to evaluate the consequent or
+;;  the alternative expression.)
+
+;; r/ Bajo la evaluación por orden normal, el intérprete primero
+;; sustituye los valores 0 y (p) en la expresión if. Luego, la nueva
+;; expresión if se evalúa en su conjunto y da como resultado 0.
+
+;; En la evaluación por orden aplicativa, el intérprete comienza
+;; evaluando 0 y (p) por separado. Luego, (p) comenzará a auto-referenciarse
+;; en un bucle infinito.
