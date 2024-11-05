@@ -127,3 +127,36 @@
 ;; En la evaluación por orden aplicativa, el intérprete comienza
 ;; evaluando 0 y (p) por separado. Luego, (p) comenzará a auto-referenciarse
 ;; en un bucle infinito.
+
+
+;; *Exercise 1.6:* Alyssa P. Hacker doesn't see why `if' needs to be
+;; provided as a special form.  "Why can't I just define it as an
+;; ordinary procedure in terms of `cond'?" she asks.  Alyssa's friend
+;; Eva Lu Ator claims this can indeed be done, and she defines a new
+;; version of `if':
+
+;;      (define (new-if predicate then-clause else-clause)
+;;         (cond (predicate then-clause)
+;;            (else else-clause)))
+
+;; Eva demonstrates the program for Alyssa:
+;; (new-if (= 2 3) 0 5) => 5
+
+;; (new-if (= 1 1) 0 5) => 0
+
+;; Delighted, Alyssa uses new-if to rewrite the square-root
+;; program:
+;; (define (sqrt-iter guess x)
+;;   (new-if (good-enough? guess x)
+;;           guess
+;;           (sqrt-iter (improve guess x) x)))
+;; What happens when Alyssa attempts to use this to compute
+;; square roots? Explain
+
+;; R/ el problema es que new-if es una función y no una forma especial.
+;; Esto significa que cada parámetro se evalúa antes de que se aplique
+;; el procedimiento. Por lo tanto (good-enough? guess x) y (sqrt-iter (improve guess x) x)
+;; se evalúan siempre, independientemente del resultado de (good-enough? guess x).
+;; Dado que la segunda alternativa sqrt-iter (improve guess x) x llama a la función
+;; recursivamente, esto resulta en un bucle infinito. En este caso, new-if nunca
+;; se ejecuta.
